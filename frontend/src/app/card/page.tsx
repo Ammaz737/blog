@@ -5,13 +5,13 @@ import { urlFor } from '../sanity/client';
 interface CardProps {
   views: number;
   comments: number;
-  title: string;
+  title?: string;  // Made title optional
   description: string;
   image?: { _type: string; asset: { _ref: string } };
 }
 
 const Cards: React.FC<CardProps> = ({ views, comments, title, description, image }) => {
-  const imageUrl = image ? urlFor(image).url() : null;
+  const imageUrl = image?._type && image.asset ? urlFor(image).url() : null;  // Safe check for image
 
   return (
     <div className="p-4 md:w-1/3">
@@ -20,10 +20,9 @@ const Cards: React.FC<CardProps> = ({ views, comments, title, description, image
           <Image
             className="lg:h-48 md:h-36 w-full object-cover object-center"
             src={imageUrl}
-            alt={title || 'Tutorial image'}
+            alt={title || 'Tutorial image'}  // If title is empty, fallback to default alt
             width={600}
             height={400}
-            layout="responsive"
           />
         ) : (
           <div>No image available</div>
